@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">DartsScore</string>
+    <string name="the_double">double</string>
+    <string name="the_triple">triple</string>
+    <string name="toast_player_one_win">Player One wins!</string>
+    <string name="toast_player_two_win">Player Two wins!</string>
+    <string name="toast_double_out">In order to win you need to reach exactly 0 by scoring a double</string>
+    <string name="out_of_shots_player_one">No shots left. Player Two\'s turn</string>
+    <string name="out_of_shots_player_two">No shots left. Player One\'s turn</string>
+    <string name="button_player_one">Player One</string>
+    <string name="button_player_two">Player Two</string>
+    <string name="button_undo">undo</string>
+    <string name="button_reset">reset</string>
+    <string name="text_shots_left">shots left</string>
+    <string name="starting_score">501</string>
+    <string name="starting_shots">3</string>
+    <string name="inner_bull">50</string>
+    <string name="outer_bull">25</string>
+</resources>
