@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/dartsBlack">
         <LinearLayout
             android:layout_width="0dp"
@@ -10,7 +11,7 @@
             android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/text_single"
-                    android:text="10"
+                    tools:text="10"
                     style="@style/TextOfValuesBlack"
                     android:layout_height="match_parent"
                     android:layout_width="0dp"

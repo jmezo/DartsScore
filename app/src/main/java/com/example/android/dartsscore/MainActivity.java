@@ -13,22 +13,33 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static java.lang.Integer.parseInt;
 
 public class MainActivity extends AppCompatActivity {
     // parameters for the numbers_layouts
     // ( I don't really understand why I need it, but it was the only solution i could find.)
-    private final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                                                                        ViewGroup.LayoutParams.FILL_PARENT,1);
+    private final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                        ViewGroup.LayoutParams.MATCH_PARENT,1);
     private boolean playerOneTurn = true;
     private int shotsLeft = 3;
     // The app saves values in it, witch will be used for the undo method.
     private ArrayList<ClickSave> listOfClicks = new ArrayList<>();
+    private static final String STARTING_POINTS = "501";
+    private TextView playerOne;
+    private TextView playerTwo;
+    private TextView countShots;
+    private RadioGroup playersGroup;
+    private LinearLayout parentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        playerOne = (TextView) findViewById(R.id.player_one_score);
+        playerTwo = (TextView) findViewById(R.id.player_two_score);
+        countShots = (TextView) findViewById(R.id.shots_left);
+        playersGroup = (RadioGroup) findViewById(R.id.players_group);
+        parentLayout = (LinearLayout) findViewById(R.id.parent_layout);
 
         //create the layout for values 1 to 10
         LinearLayout firstColumn= (LinearLayout) findViewById(R.id.score_to_10);
@@ -66,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
     }
     // For reset button.
     public void reset(View view){
-        TextView playerOne = (TextView) findViewById(R.id.player_one_score);
-        playerOne.setText(501+"");
-        TextView playerTwo = (TextView) findViewById(R.id.player_two_score);
-        playerTwo.setText(501+"");
+
+        playerOne.setText(STARTING_POINTS);
+
+        playerTwo.setText(STARTING_POINTS);
         setShotsLeft(3);
         listOfClicks.clear();
         selectPlayerOne(true);
@@ -80,15 +91,16 @@ public class MainActivity extends AppCompatActivity {
         if(listOfClicks.size() !=0){
             ClickSave thisClickSave = listOfClicks.get(listOfClicks.size()-1);
             if(thisClickSave.playerOneTurn){
-                TextView player = (TextView) findViewById(R.id.player_one_score);
-                int beforeScore = Integer.parseInt(player.getText().toString()) + thisClickSave.subtracted;
-                player.setText(beforeScore+"");
+
+                int beforeScore = Integer.parseInt(playerOne.getText().toString()) + thisClickSave.subtracted;
+                String beforeScoreString = String.valueOf(beforeScore);
+                playerOne.setText(beforeScoreString);
                 selectPlayerOne(true);
             }
             else{
-                TextView player = (TextView) findViewById(R.id.player_two_score);
-                int beforeScore = Integer.parseInt(player.getText().toString()) + thisClickSave.subtracted;
-                player.setText(beforeScore+"");
+                int beforeScore = Integer.parseInt(playerTwo.getText().toString()) + thisClickSave.subtracted;
+                String beforeScoreString = String.valueOf(beforeScore);
+                playerTwo.setText(beforeScoreString);
                 selectPlayerOne(false);
             }
             setShotsLeft(thisClickSave.shotsLeft);
@@ -102,23 +114,24 @@ public class MainActivity extends AppCompatActivity {
     private void fillLayout(LinearLayout layout, boolean whiteNext, int startCount){
         for(int i = 1; i< 11; i++){
             int count = i+startCount;
-            LinearLayout row = new LinearLayout(this);
+            LinearLayout row;
 
-            LinearLayout line =(LinearLayout)getLayoutInflater().inflate(R.layout.simple_line, null);
+            LinearLayout line =(LinearLayout)getLayoutInflater().inflate(R.layout.simple_line, parentLayout, false);
 
             if(whiteNext){
-                row = (LinearLayout)getLayoutInflater().inflate(R.layout.numbers_layout_white, null);
+                row = (LinearLayout)getLayoutInflater().inflate(R.layout.numbers_layout_white,parentLayout, false );
 
             }
             else{
-                row = (LinearLayout)getLayoutInflater().inflate(R.layout.numbers_layout_black, null);
+                row = (LinearLayout)getLayoutInflater().inflate(R.layout.numbers_layout_black, parentLayout, false);
 
             }
             //set the layout parameters (Again, I don't know why i need it but the layouts don't show without it.)
             row.setLayoutParams(params);
 
             TextView singleText = (TextView) row.findViewById(R.id.text_single);
-            singleText.setText(count+"");
+            String countString = String.valueOf(count);
+            singleText.setText(countString);
             makeTextClickable(singleText, count, false);
             TextView doubleText = (TextView) row.findViewById(R.id.text_double);
             makeTextClickable(doubleText, count*2, true);
@@ -141,12 +154,12 @@ public class MainActivity extends AppCompatActivity {
                         showToastMessage(R.string.out_of_shots_player_one);
                     }
                     else{
-                        TextView scoreCounter = (TextView) findViewById(R.id.player_one_score);
-                        int newScore = Integer.parseInt(scoreCounter.getText().toString()) - value;
+                        int newScore = Integer.parseInt(playerOne.getText().toString()) - value;
+                        String newScoreString = String.valueOf(newScore);
                         if(newScore < 1){
                             //It only lets you reach 0 by scoring a double.
                             if(newScore == 0 && checkIfDouble){
-                                scoreCounter.setText(newScore + "");
+                                playerOne.setText(newScoreString);
                                 showToastMessage(R.string.toast_player_one_win);
                                 listOfClicks.add(new ClickSave(playerOneTurn, value, shotsLeft));
                             }
@@ -156,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         else {
-                            scoreCounter.setText(newScore + "");
+                            playerOne.setText(newScoreString);
                             listOfClicks.add(new ClickSave(playerOneTurn, value, shotsLeft));
                             setShotsLeft(shotsLeft-1);
                         }
@@ -170,11 +183,12 @@ public class MainActivity extends AppCompatActivity {
                         showToastMessage(R.string.out_of_shots_player_two);
                     }
                     else{
-                        TextView scoreCounter = (TextView) findViewById(R.id.player_two_score);
-                        int newScore = Integer.parseInt(scoreCounter.getText().toString()) - value;
+
+                        int newScore = Integer.parseInt(playerTwo.getText().toString()) - value;
+                        String newScoreString = String.valueOf(newScore);
                         if(newScore < 1){
                             if(newScore == 0 && checkIfDouble){
-                                scoreCounter.setText(newScore + "");
+                                playerTwo.setText(newScoreString);
                                 showToastMessage(R.string.toast_player_two_win);
                                 listOfClicks.add(new ClickSave(playerOneTurn, value, shotsLeft));
                             }
@@ -184,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         else {
-                            scoreCounter.setText(newScore + "");
+                            playerTwo.setText(newScoreString);
                             listOfClicks.add(new ClickSave(playerOneTurn, value, shotsLeft));
                             setShotsLeft(shotsLeft-1);
                         }
@@ -205,19 +219,18 @@ public class MainActivity extends AppCompatActivity {
     }
     // Sets shotsLeft variable, and it's TextView.
     private void setShotsLeft(int i){
-        TextView countShots = (TextView) findViewById(R.id.shots_left);
         shotsLeft = i;
-        countShots.setText(shotsLeft+"");
+        String shotsLeftString = String.valueOf(shotsLeft);
+        countShots.setText(shotsLeftString);
     }
     // Modifies the radio group to player one(on true) or player two(on false).
     private void selectPlayerOne(boolean playerOne){
-        RadioGroup players = (RadioGroup) findViewById(R.id.players_group);
         if(playerOne){
-            players.check(R.id.player_one_button);
+            playersGroup.check(R.id.player_one_button);
             playerOneTurn = true;
         }
         else {
-            players.check(R.id.player_two_button);
+            playersGroup.check(R.id.player_two_button);
             playerOneTurn = false;
         }
     }

@@ -22,5 +22,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/dartsBlack</item>
     </style>
+    <style name="ScoreTextStyle">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/dartsBlack</item>
+    </style>
 
 </resources>
